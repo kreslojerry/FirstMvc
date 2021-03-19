@@ -1,5 +1,5 @@
 # FirstMvc
-Простое веб-приложение без использования spring-boot.  
+Простое веб-приложение Spring WebMVC  
 Использованные технологии:
 + Spring ORM
 + Spring JDBC
