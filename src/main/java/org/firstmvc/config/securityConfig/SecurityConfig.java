@@ -1,6 +1,6 @@
 package org.firstmvc.config.securityConfig;
 
-import org.firstmvc.security.AuthProviderImpl;
+import org.firstmvc.security.AuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,8 +16,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @ComponentScan("org.firstmvc.security")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private AuthProvider authProvider;
+
     @Autowired
-    AuthProviderImpl authProvider;
+    public void setAuthProvider(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

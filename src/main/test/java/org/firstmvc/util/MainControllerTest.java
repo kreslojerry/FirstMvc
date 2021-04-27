@@ -4,7 +4,6 @@ import org.firstmvc.config.PersistenceConfig;
 import org.firstmvc.config.WebConfig;
 import org.firstmvc.config.securityConfig.SecurityConfig;
 import org.firstmvc.model.User;
-import org.firstmvc.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

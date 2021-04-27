@@ -1,10 +1,9 @@
 package org.firstmvc.controller;
 
+import org.firstmvc.dao.UserDAO;
 import org.firstmvc.model.User;
-import org.firstmvc.service.UserService;
 import org.firstmvc.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,18 +12,16 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class MainController {
 
-    @Autowired
-    private UserService userService;
+    private final UserDAO userDAO;
+
+    private final UserValidator userValidator;
 
     @Autowired
-    private UserValidator userValidator;
-
-//    @Autowired
-//    public MainController(UserDAO userService,
-//                          UserValidator userValidator) {
-//        this.userService = userService;
-//        this.userValidator = userValidator;
-//    }
+    public MainController(UserDAO userDAO,
+                          UserValidator userValidator) {
+        this.userDAO = userDAO;
+        this.userValidator = userValidator;
+    }
 
     @GetMapping("/")
     public String main(@RequestParam(value = "name",
@@ -37,7 +34,7 @@ public class MainController {
 
     @GetMapping("/users")
     public String users(Model model) {
-        model.addAttribute("users", userService.getUserList());
+        model.addAttribute("users", userDAO.getUserList());
         return "/users";
     }
 
@@ -45,7 +42,7 @@ public class MainController {
     @GetMapping("/users/{id}/edit")
     public String editView(@PathVariable("id") int id,
                           Model model) {
-        User user = userService.getUserById(id);
+        User user = userDAO.getUserById(id);
         user.setPassword("");
         model.addAttribute("user", user);
         return "/edit";
@@ -59,14 +56,14 @@ public class MainController {
         userValidator.validate(user, result);
         if (result.hasErrors())
             return "/edit";
-        userService.editUser(id, user);
+        userDAO.editUser(id, user);
         return "redirect:/users";
     }
 
     //Удаление пользователя
     @GetMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable("id") int id) {
-        userService.deleteUser(id);
+        userDAO.deleteUser(id);
         return "redirect:/users";
     }
 
@@ -84,7 +81,7 @@ public class MainController {
         userValidator.validate(user, result);
         if (result.hasErrors())
             return "/newUser";
-        userService.addUser(user);
+        userDAO.addUser(user);
         return "redirect:/users";
     }
 

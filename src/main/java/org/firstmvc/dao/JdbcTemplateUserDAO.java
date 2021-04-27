@@ -8,25 +8,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+//@Component
 public class JdbcTemplateUserDAO implements UserDAO {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public JdbcTemplateUserDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-//    public UserDAO() {
-////        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-////        dataSource.setDriverClassName("org.postgresql.Driver");
-////        dataSource.setUrl("jdbc:postgresql://localhost:5432/spring_db");
-////        dataSource.setUsername("postgres");
-////        dataSource.setPassword("admin");
-////        this.jdbcTemplate = new JdbcTemplate(dataSource);
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
 
     @Override
     public List<User> getUserList() {
@@ -35,7 +25,7 @@ public class JdbcTemplateUserDAO implements UserDAO {
 
     @Override
     public void addUser(User user) {
-        jdbcTemplate.update("INSERT INTO Users(name, surname, email) VALUES(?, ?, ?)", user.getName(), user.getSurname(), user.getEmail());
+        jdbcTemplate.update("INSERT INTO Users(name, surname, email, password) VALUES(?, ?, ?, ?)", user.getName(), user.getSurname(), user.getEmail(), user.getPassword());
     }
 
     @Override

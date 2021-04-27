@@ -2,7 +2,6 @@ package org.firstmvc.security;
 
 import org.firstmvc.model.User;
 import org.firstmvc.repository.UserRepository;
-import org.firstmvc.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AuthProviderImpl implements AuthenticationProvider {
+public class AuthProvider implements AuthenticationProvider {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

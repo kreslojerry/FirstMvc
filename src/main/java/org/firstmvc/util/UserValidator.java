@@ -1,9 +1,8 @@
 package org.firstmvc.util;
 
+import org.firstmvc.dao.UserDAO;
 import org.firstmvc.model.User;
-import org.firstmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -12,8 +11,12 @@ import org.springframework.validation.Validator;
 @Component
 public class UserValidator implements Validator {
 
+    private final UserDAO userDAO;
+
     @Autowired
-    private UserService userService;
+    public UserValidator(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -24,7 +27,7 @@ public class UserValidator implements Validator {
     public void validate(Object o, Errors errors) {
         User user = (User) o;
 
-        User emailValidUser = userService.getUserByEmail(user.getEmail());
+        User emailValidUser = userDAO.getUserByEmail(user.getEmail());
         if (emailValidUser != null && emailValidUser.getId() != user.getId())
             errors.rejectValue("email", "", "Этот адрес почты уже занят");
 

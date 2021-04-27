@@ -1,20 +1,65 @@
 package org.firstmvc.service;
 
-
+import org.firstmvc.dao.UserDAO;
 import org.firstmvc.model.User;
-
+import org.firstmvc.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-public interface UserService {
-    List<User> getUserList();
+@Service
+@Transactional(readOnly = true)
+public class UserService implements UserDAO {
 
-    void addUser(User user);
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    void deleteUser(int id);
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    void editUser(int id, User updateUser);
+    public List<User> getUserList() {
+        return userRepository.findAll(Sort.by("id"));
+    }
 
-    User getUserById(int id);
+    @Transactional
+    @Override
+    public void addUser(User user) {
+        user.setPassword(passwordEncoder.encode(
+                user.getPassword()
+        ));
+        userRepository.save(user);
+    }
 
-    User getUserByEmail(String email);
+    @Transactional
+    @Override
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void editUser(int id, User updateUser) {
+        updateUser.setPassword(passwordEncoder.encode(
+                updateUser.getPassword()
+        ));
+        userRepository.save(
+                getUserById(id).copyWithoutId(updateUser)
+        );
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findFirstByEmail(email);
+    }
 }
