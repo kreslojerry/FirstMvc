@@ -19,7 +19,7 @@
     <maven.compiler.target>1.7</maven.compiler.target>
     <spring.version>5.3.2</spring.version>
     <aspect.version>1.9.6</aspect.version>
-    <spring.security.version>5.4.2</spring.security.version>
+    <spring.security.version>5.4.4</spring.security.version>
   </properties>
 
   <dependencies>
